@@ -1,3 +1,4 @@
+﻿
 <template lang ="pug">
 .wrapper
   div.left-size(@onDialog="onDialog")
