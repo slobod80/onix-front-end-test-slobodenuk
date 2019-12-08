@@ -1,30 +1,34 @@
 <template lang="pug">
 #app
-
-  div.flex-cont
-    leftColumn
-    div.right-size
-      rightColumn
-      dialogInfo
-
+  .flex-cont
+    leftColumn(:notification="notification")
+    .right-size
+      rightColumn(@onDialog="onDialog($event)")      
 </template>
 
-<script lang="ts">
+<script lang="ts"> 
+
 import { Component, Vue } from 'vue-property-decorator';
 import leftColumn from "./components/leftcolumn.vue";
 import rightColumn from "./components/rightcolumn.vue";
-import dialogInfo from "./components/dialoginfo.vue";
 
 @Component({
   components: {
     leftColumn,
     rightColumn,
-    dialogInfo      
   },
 })
+
 export default class App extends Vue {
 
+  notification:number=3;
+
+  onDialog(index:number):void 
+  {
+      this.notification=index
+  }
 }
+
 </script>
 
 <style>

@@ -1,7 +1,6 @@
-﻿
 <template lang ="pug">
 .wrapper
-  div.left-size(@onDialog="onDialog")
+  div.left-size
     p <br>
     p.logo1 {{project}}
     div.photo
@@ -14,7 +13,7 @@
         p.poin(@click="click1") Completed Task
       section.item1
         h2 {{openTasks}}
-        p Open Tasks
+        p.poin(@click="clickOpenTasks") Open Tasks
     ul
       li
         a.menu(href="#") Menu
@@ -25,16 +24,19 @@
       li
         a(href="#") Notifications
         div.three 
-          div.three1 {{notification}}
+          div.three1 {{notification}} 
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
-@Component
-export default class leftColumn extends Vue 
-  {
-        project:string="PROJECTUS";
 
+@Component
+
+export default class leftColumn extends Vue 
+{
+        @Prop() notification!: number;
+
+        project:string="PROJECTUS";
         author:string="Jean Gonsales";
 
         prof:string="Product Owner";
@@ -43,9 +45,8 @@ export default class leftColumn extends Vue
 
         openTasks:number=11;
 
-        notification:number=3;
 
-        click1 () {
+        click1 ():void {
           if (confirm ("Are you sure you want to change the number of tasks?")) 
             {  
                 if (this.openTasks>0) 
@@ -57,12 +58,15 @@ export default class leftColumn extends Vue
             }
           }
 
-  onDialog (index:number):void
-  {
-    alert("index");
-
-  }
-
+        clickOpenTasks():void 
+        {
+          if (this.openTasks>0)
+                {
+                  this.$router.push({path: '/tasks'});
+                }
+          else alert("Нет открытых задач!")
+          
+        }
 
   }
 </script>

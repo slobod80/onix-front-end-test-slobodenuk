@@ -1,10 +1,27 @@
 <template lang ="pug">
 .wrapper
+
+
   div.main
     div.in_main
-      p.today {{dialogdata}}
-    div.photo-flex
-      img(v-for="(item,index) in photo" :key="index.id",v-bind:src="require('../assets/'+item)",@click="click2(index)" alt="")
+      div(v-show="menuId==2")
+        p.today {{dialogdata}} 
+        table.table2
+              tr(v-for="(item,index) in dialog" :key="index.id")
+                td.table_td_1
+                  img(v-bind:src="require('../assets/'+item.icon_photo)" alt="")
+                td.table_td_2 {{dialog[index].log}}
+                td.table_td_3 {{dialog[index].time}}           
+        div.photo-flex
+        img.photo-flex1(v-for="(item,index) in photo" :key="index.id",v-bind:src="require('../assets/'+item)",@click="click2(index)" alt="")
+
+      div(v-show="menuId==0")
+         tr(v-for="(item,index) in myTask" :key="index.id")
+              td(style="width:150px") {{myTask[index].nameOfTask}}
+              td(style="width:65%") {{myTask[index].myTask}}
+              td {{myTask[index].dateTask}}
+
+
 
 </template>
 
@@ -19,11 +36,18 @@ interface Idialog
       icon_photo:string;
     }
 
+interface Itask
+    {
+      nameOfTask:string;
+      myTask:string;
+      dateTask:string;
+    }
+
 @Component
+
 export default class dialogInfo extends Vue 
 {
-  
-
+  @Prop() menuId!: number;
 
   photo:string[]=["photo1.jpg","photo2.jpg","photo3.jpg","photo4.jpg"];
 
@@ -34,14 +58,19 @@ export default class dialogInfo extends Vue
               {log:"Emilee Simchenko commented on Account for teams and personal in bottom style",time:"7:32 PM",icon_photo:"icon2.svg"},
               {log:"During a project build, it is necessary to evaluate the product design and development against project requirements and outcomes", time:"",icon_photo:"no-image.png"},
               {log:"Darika Samak uploaded 4 files on An option to search in current projects or in all projects",time:"6:02 PM",icon_photo:"icon3.png"}
-              ];
+              ]
 
+  myTask:Itask[]=[
+                {nameOfTask:"Name of task1",myTask:"My task1", dateTask:"Date task 1"},
+                {nameOfTask:"Name of task2",myTask:"My task2", dateTask:"Date task 2"},
+                {nameOfTask:"Name of task3",myTask:"My task3", dateTask:"Date task 3"},
+                {nameOfTask:"Name of task4",myTask:"My task4", dateTask:"Date task 4"}
+              ]
 
 
   click2(index:number):void
-    {
+    {     
       this.$emit("onDialog",index);
-      alert(index)
     }
 
   }
@@ -60,6 +89,7 @@ export default class dialogInfo extends Vue
 .table_td_1{
 	width:13px;
 	padding-top:10px;
+  padding-right:1px;
 }
 
 .table_td_2{
@@ -89,6 +119,7 @@ export default class dialogInfo extends Vue
 .today {
   padding-top: 35px;
   padding-left: 30px;
+  padding-bottom:25px;
   font-size: 14px;
   opacity: 0.5; 
 }
@@ -176,10 +207,11 @@ td {
   justify-content: flex-start;
   margin-left: 70px;
   margin-bottom: 50px;
+  margin-top:50px;
 }
 
 
-.photo-flex img {
+.photo-flex1{
   cursor: pointer;
   width: 100px;
   height: 100px;

@@ -2,7 +2,7 @@
 .wrapper
   div.right-size
     div.flex-sect
-      p.first Website Redesign
+      p.first Website Redesign 
       div.icons
         img.photo2(src="../assets/user1.png" alt="User1")
         img.photo2(src="../assets/user2.png" alt="User2")
@@ -10,22 +10,23 @@
         a.kind1(href="#") Share
         a.kind2(href="#") Chat
     nav.menu-2
-      a.menu2(href="#") Tasks
-      a.menu2(href="#") Kanban
-      a.menu2(href="#") Activity
-      a.menu2(href="#") Calendar
-      a.menu2(href="#") Files
-
+      router-link.menu2(to='/Tasks') Tasks
+      router-link.menu2(to='/Kanban') Kanban
+      router-link.menu2(to='/Activity' @onDialog="onDialog($event)") Activity
+      router-link.menu2(to='/Calendar') Calendar
+      router-link.menu2(to='/Files') Files
+    router-view(@onDialog="onDialog($event)")
 </template>
 
 <script lang="ts">
+
 import { Component, Prop, Vue } from 'vue-property-decorator';
-@Component
+
 export default class rightColumn extends Vue {
-  
 
-
-
+  onDialog(index:number):void {
+    this.$emit("onDialog",index)
+  }
 }
 </script>
 
