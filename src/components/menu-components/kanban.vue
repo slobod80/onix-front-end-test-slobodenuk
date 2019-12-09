@@ -1,6 +1,6 @@
 <template>
     <div>
-        canban
+        Coming soon!
     </div>
 </template>
 <script>
