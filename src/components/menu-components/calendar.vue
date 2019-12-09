@@ -1,6 +1,6 @@
 <template>
     <div>
-        Calentaddddd
+        Coming soon!
     </div>
 </template>
 <script>
