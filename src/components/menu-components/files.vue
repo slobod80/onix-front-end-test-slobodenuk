@@ -1,6 +1,6 @@
 <template>
     <div>
-        files
+        Coming soon!
     </div>
 </template>
 <script>
