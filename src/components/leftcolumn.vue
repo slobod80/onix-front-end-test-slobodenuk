@@ -35,6 +35,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class leftColumn extends Vue 
 {
         @Prop() notification!: number;
+        @Prop() openTasks!: number;
 
         project:string="PROJECTUS";
         author:string="Jean Gonsales";
@@ -43,19 +44,18 @@ export default class leftColumn extends Vue
 
         completedTask:number=372;
 
-        openTasks:number=11;
-
 
         click1 ():void {
           if (confirm ("Are you sure you want to change the number of tasks?")) 
             {  
-                if (this.openTasks>0) 
-                  {
-                      this.completedTask++;
-                      this.openTasks--;
+                alert("Нельзя так уменьшать задачи");
+                //if (this.openTasks>0) 
+                //  {
+                //      this.completedTask++;
+                //      this.openTasks--;
                   }
                 else alert ("Открытых задач уже нет. Отдыхаем!")
-            }
+            
           }
 
         clickOpenTasks():void 
@@ -67,6 +67,7 @@ export default class leftColumn extends Vue
           else alert("Нет открытых задач!")
           
         }
+
 
   }
 </script>

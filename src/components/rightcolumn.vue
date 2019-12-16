@@ -10,23 +10,56 @@
         a.kind1(href="#") Share
         a.kind2(href="#") Chat
     nav.menu-2
-      router-link.menu2(to='/Tasks') Tasks
+      router-link.menu2( to='/Tasks') Tasks
       router-link.menu2(to='/Kanban') Kanban
-      router-link.menu2(to='/Activity' @onDialog="onDialog($event)") Activity
+      router-link.menu2(to='/Activity') Activity
       router-link.menu2(to='/Calendar') Calendar
       router-link.menu2(to='/Files') Files
-    router-view(@onDialog="onDialog($event)")
+    router-view(
+        @onDeleteTask="onDeleteTask($event)",
+        @onDialog="onDialog($event)",
+        @onAddTask="onAddTask($event)",
+        @incOpenTasks="incOpenTasks",
+        @decOpenTasks="decOpenTasks"
+        :myTask="myTask")
 </template>
 
 <script lang="ts">
 
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import {Itask} from "./menu-components/types/task";
+
+@Component
 
 export default class rightColumn extends Vue {
+
+  myTask:Itask[]=  [
+                {nameOfTask:"Name of task1",myTask:"My task1", dateTask:"Date task 1"},
+                {nameOfTask:"Name of task2",myTask:"My task2", dateTask:"Date task 2"},
+                {nameOfTask:"Name of task3",myTask:"My task3", dateTask:"Date task 3"},
+                {nameOfTask:"Name of task4",myTask:"My task4", dateTask:"Date task 4"}
+                  ];
 
   onDialog(index:number):void {
     this.$emit("onDialog",index)
   }
+
+  onAddTask(nameOfTask:string[]):void {
+    this.myTask.push({nameOfTask:nameOfTask[0], myTask:nameOfTask[1], dateTask:nameOfTask[2]});
+  }
+
+  onDeleteTask(index:number):void {
+    this.myTask.splice(index,1);
+  }
+
+  incOpenTasks():void {
+    this.$emit("incOpenTasks");
+  }
+
+  decOpenTasks():void {
+    this.$emit("decOpenTasks");
+  }
+
 }
 </script>
 
@@ -141,11 +174,18 @@ export default class rightColumn extends Vue {
 }
 
 
-.menu2:hover {
+.menu2 active {
     padding-bottom: 8px;
     border-bottom: 2px solid #FFC200;
     margin-bottom: -8px;
 }
+
+.router-link-active {
+    padding-bottom: 8px;
+    border-bottom: 2px solid #FFC200;
+    margin-bottom: -8px; 
+}
+
 
 .poin {
   cursor: pointer;

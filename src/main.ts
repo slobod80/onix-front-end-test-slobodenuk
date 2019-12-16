@@ -11,7 +11,7 @@ import stub from "./components/menu-components/stub.vue";
 import error404 from "./components/menu-components/error404.vue"
 
 const routes = [
-    { path: '/tasks', component: tasks },
+    { path: '/tasks', component: tasks},
     { path: '/kanban', component: stub },
     { path: '/activity', component: activity },
     { path: '/calendar', component: stub },

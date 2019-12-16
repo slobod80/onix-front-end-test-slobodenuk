@@ -16,13 +16,9 @@
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import {Idialog} from "../../components/menu-components/types/dialog"
 
-interface Idialog
-    {
-      log:string;
-      time:string;
-      icon_photo:string;
-    }
+
 
 @Component
 
@@ -73,12 +69,11 @@ export default class activity extends Vue
 }
 .main {
   display: block;
-  padding-top: 10px;
+  padding-top: 25px;
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: #EAEAEA;  
 }
-
 
 .in_main {
   width: 730px; 
@@ -189,6 +184,7 @@ td {
   height: 100px;
   border-radius: 8px;
   margin-right: 10px;
+  margin-bottom: 80px;
 }
 
 

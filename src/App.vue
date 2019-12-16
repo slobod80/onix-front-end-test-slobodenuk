@@ -1,9 +1,13 @@
 <template lang="pug">
 #app
   .flex-cont
-    leftColumn(:notification="notification")
+    leftColumn(
+      :notification="notification"
+      :openTasks="openTasks")
     .right-size
-      rightColumn(@onDialog="onDialog($event)")      
+      rightColumn(@onDialog="onDialog($event)",
+        @incOpenTasks="incOpenTasks",
+        @decOpenTasks="decOpenTasks")      
 </template>
 
 <script lang="ts"> 
@@ -22,10 +26,19 @@ import rightColumn from "./components/rightcolumn.vue";
 export default class App extends Vue {
 
   notification:number=3;
+  openTasks:number=4;
 
   onDialog(index:number):void 
   {
       this.notification=index
+  }
+
+  incOpenTasks():void {
+    this.openTasks++;
+  }
+
+  decOpenTasks():void {
+    this.openTasks--;
   }
 }
 
