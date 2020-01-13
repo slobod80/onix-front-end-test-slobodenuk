@@ -12,7 +12,7 @@ import error404 from "./components/menu-components/error404.vue"
 
 const routes = [
     { path: '/tasks', component: tasks},
-    { path: '/kanban', component: stub },
+    { path: '/kanban', component: kanban },
     { path: '/activity', component: activity },
     { path: '/calendar', component: stub },
     { path: '/files', component: stub },
@@ -22,8 +22,10 @@ const routes = [
 
 Vue.use(Router);
 const router = new Router({routes});
+var data = { assd: 1 }
 
-new Vue({
+var vm=new Vue({
 	router,
+	data:data,
   render: h => h(App),
 }).$mount('#app')

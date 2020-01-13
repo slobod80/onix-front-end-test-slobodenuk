@@ -1,21 +1,47 @@
 <template lang="pug">
-  #app
-    Layout
+  .flex-cont
+    SideBar(
+      :notification="notification"
+      :openTasks="openTasks")
+    .right-size
+      Header(@onDialog="onDialog($event)",
+        @incOpenTasks="incOpenTasks",
+        @decOpenTasks="decOpenTasks")
+      Content   
 </template>
 
 <script lang="ts"> 
 
 import { Component, Vue } from 'vue-property-decorator';
-import Layout from './layout.vue';
+import SideBar from "./components/sidebar.vue";
+import Header from "./components/header.vue";
+import Content from "./components/content.vue";
 
 @Component({
-  name:"app",
   components: {
-    Layout
-  }
+    SideBar,
+    Header,
+    Content,
+  },
 })
 
 export default class App extends Vue {
+
+  notification:number=3;
+  openTasks:number=4;
+
+  onDialog(index:number):void 
+  {
+      this.notification=index
+  }
+
+  incOpenTasks():void {
+    this.openTasks++;
+  }
+
+  decOpenTasks():void {
+    this.openTasks--;
+  }
 }
 
 </script>

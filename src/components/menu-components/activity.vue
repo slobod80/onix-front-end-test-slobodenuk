@@ -67,21 +67,6 @@ export default class activity extends Vue
 .table_td_3{
   font-size:12px;
 }
-.main {
-  display: block;
-  padding-top: 25px;
-  width: 100%;
-  height: 100vh;
-  background-color: #EAEAEA;  
-}
-
-.in_main {
-  width: 730px; 
-  margin: auto;
-  background-color: #ffffff;
-  border-radius: 8px; 
-}
-
 
 .today {
   padding-top: 35px;
@@ -227,14 +212,6 @@ table {
   justify-content: center;
   margin-left: 30px;
 }
-}
 
-@media (max-width: 900px) {
-.first::after {
-  left: 170px;
-  top:30px;
-  position: absolute;
-  opacity: 0.5;
-}
 }
 </style>

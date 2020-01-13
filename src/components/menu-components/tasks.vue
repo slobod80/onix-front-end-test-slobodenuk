@@ -4,22 +4,23 @@
     .in_main
       .flex-task
         .flex-task-container
-          tr(v-for="(item,index) in myTask" :key=index)
-            td(style="width:170px") {{myTask[index].nameOfTask}}
-            td(style="width:400px") {{myTask[index].myTask}}
-            td {{myTask[index].dateTask}}
-            td 
-                button(type="button" @click="deleteTask(index)") X
-
-          //div(v-for="(item,index) in myTask" :key=index)
-          //  span {{myTask[index].nameOfTask}}
-          //  button(type="button" @click="deleteTask(index)") X
-
-        .main-task 
+          transition-group( name="item" @after-enter="enter")
+            tr(v-for="(item,index) in myTask" :key="index+1"
+              v-if=" index<idx "
+              v-bind:class="[index==indexOfNewTask-1 && isNewTask ? 'new-task' : '']")
+              td(style="width:20%") {{myTask[index].nameOfTask}}
+              td(style="width:45%") {{myTask[index].myTask}}
+              td(style="width:18%") {{myTask[index].dateTask}}
+              td.status(style="width:15%" @click="changeStatusOfTask(index)") {{myTask[index].status}}
+              button(type="button" @click="deleteTask(index)") X
+        form
+          .main-task 
+            p Введите задачу
             input(v-model.trim="nameOfTask" placeholder="Имя задачи")
             input(v-model.trim="inputTask" placeholder="Задача")
             input(v-model.trim="inputDate" placeholder="Дата окончания")
-            button(type="button" @click="addTask") Добавить задачу
+            button(type="submit" @click="addTask") Добавить задачу
+
 </template>
 
 <script lang="ts">
@@ -29,20 +30,18 @@ import {Itask} from "../../components/menu-components/types/task";
 @Component
 export default class tasks extends Vue 
 {
-  @Prop() myTask!:Itask;
-
- //myTask1:Itask[]=  [
- //               {nameOfTask:"Name of task1",myTask:"My task1", dateTask:"Date task 1"},
- //               {nameOfTask:"Name of task2",myTask:"My task2", dateTask:"Date task 2"},
- //               {nameOfTask:"Name of task3",myTask:"My task3", dateTask:"Date task 3"},
- //               {nameOfTask:"Name of task4",myTask:"My task4", dateTask:"Date task 4"}
- //                 ];
-
-
+  @Prop() myTask!:Itask[];
 
   nameOfTask:string="";
   inputTask:string="";
   inputDate:string="";
+  idx:number=0;
+  indexOfNewTask:number=0;
+  isNewTask:boolean=false;
+
+  changeStatusOfTask(index:number):void {
+    this.$emit("onChangeStatusOfTask",index);
+  }
 
   addTask():void {
     if (this.nameOfTask!="" && this.inputTask!="" && this.inputDate!="")
@@ -51,25 +50,73 @@ export default class tasks extends Vue
       this.nameOfTask="";
       this.inputTask="";
       this.inputDate="";     
-      this.$emit("incOpenTasks")
+      this.$emit("incOpenTasks");
+      this.indexOfNewTask++;
+      this.isNewTask=true;
     }
     else alert ("Нельзя вводить пустые задачи")
 
   }
 
-
   deleteTask(index:number):void {
     this.$emit("onDeleteTask",index);
     this.$emit("decOpenTasks");
+    this.indexOfNewTask--;
+    this.isNewTask=false;
   }
-}
 
+
+    mounted():void 
+    {
+      this.indexOfNewTask=this.myTask.length;
+      this.run();
+    }  
+
+    enter():void 
+    {
+      this.idx=this.idx+1;
+    }
+
+    run():void 
+    {
+      this.idx=1;
+    }
+
+}
 </script>
 
 <style scoped>
 
+.new-task {
+  animation-name: blinker;
+  animation-iteration-count: 3;
+  animation-timing-function: cubic-bezier(1.0,0,0,1.0);
+  animation-duration: 1s;
+}
+
+@keyframes blinker {
+  from { opacity: 1.0; }
+  to { opacity: 0.0; }
+  animation-duration:2s;
+}
+
+
+.old-task {
+  color: black;
+}
+
+.item-enter-active,
+.item-leave-active {
+  transition: font-size .3s;
+}
+  
+.item-enter,
+.item-leave-to {
+  font-size: 20px;
+}
+
 .flex-task-container {
-  height:400px;
+  height:200px;
   overflow-y: auto;
 }
 
@@ -79,30 +126,13 @@ export default class tasks extends Vue
 }
 
 .main-task {
+  margin-top: 30px;
+  margin-bottom: 30px;
   display: flex;
   flex-direction: column;
   text-align: center;
 }
-
-.main {
-  display: block;
-  padding-top: 25px;
-  width: 100%;
-  height: 80vh;
-  background-color: #EAEAEA;  
-}
-
-.in_main {
-  width: 730px; 
-  margin: auto;
-  background-color: #ffffff;
-  border-radius: 8px; 
-}
-
-
-td {
- height: 80px;
- padding-left: 10px;
- padding-top: 20px;
+td.status:hover {
+  background-color: #EAEAEA;
 }
 </style>

@@ -1,13 +1,14 @@
-<template>
-    <div>
-        Coming soon...
-    </div>
+<template lang ="pug">
+	.main
+		.in_main
+			p Coming soon...
 </template>
 <script>
-export default {
-    
-}
+export default {}
 </script>
+
 <style scoped>
-	color:red
+p {
+	height:300px;
+}
 </style>
