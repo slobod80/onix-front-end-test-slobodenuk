@@ -1,7 +1,8 @@
 export interface Itask
     {
-      nameOfTask:string;
-      myTask:string;
-      dateTask:string;
-      status:string;
+    id:number;
+	nameOfTask:string;
+	myTask:string;
+	dateTask:string;
+	status:string;
     }

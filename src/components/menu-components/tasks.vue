@@ -7,55 +7,79 @@
           transition-group( name="item" @after-enter="enter")
             tr(v-for="(item,index) in myTask" :key="index+1"
               v-if=" index<idx "
+              @dblclick="editTask(index)"
               v-bind:class="[index==indexOfNewTask-1 && isNewTask ? 'new-task' : '']")
               td(style="width:20%") {{myTask[index].nameOfTask}}
               td(style="width:45%") {{myTask[index].myTask}}
               td(style="width:18%") {{myTask[index].dateTask}}
               td.status(style="width:15%" @click="changeStatusOfTask(index)") {{myTask[index].status}}
               button(type="button" @click="deleteTask(index)") X
-        form
-          .main-task 
-            p Введите задачу
-            input(v-model.trim="nameOfTask" placeholder="Имя задачи")
-            input(v-model.trim="inputTask" placeholder="Задача")
-            input(v-model.trim="inputDate" placeholder="Дата окончания")
-            button(type="submit" @click="addTask") Добавить задачу
-
+        button(type="submit" 
+          @click="addTask1") Добавить задачу
+        addTaskModal(
+            :activeModalAddTask="activeModalAddTask"
+            v-if="activeModalAddTask"
+            @closeModal="closeModal"
+            @addTask="addTask")
+        taskDetailsModal(
+            :activeModalDetails="activeModalDetails"
+            v-if="activeModalDetails"
+            :idTask="idTask"
+            :myTask="myTask"
+            @closeModalDetails="closeModalDetails")
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import {Itask} from "../../components/menu-components/types/task";
+import addTaskModal from "../../components/addtaskmodal.vue";
+import taskDetailsModal from "../../components/taskdetailsmodal.vue";
 
-@Component
+@Component({
+  components: {
+    addTaskModal,
+    taskDetailsModal
+  }
+})
 export default class tasks extends Vue 
 {
   @Prop() myTask!:Itask[];
 
-  nameOfTask:string="";
-  inputTask:string="";
-  inputDate:string="";
   idx:number=0;
   indexOfNewTask:number=0;
   isNewTask:boolean=false;
+  idTask:number=0;
+  inputTask:string="";
+  activeModalAddTask:boolean=false;
+  activeModalDetails:boolean=false;
+
+  editTask(index:number):void {
+    this.idTask=index;
+    this.inputTask=this.myTask[index].myTask;
+    this.activeModalDetails=true;
+  }
 
   changeStatusOfTask(index:number):void {
     this.$emit("onChangeStatusOfTask",index);
   }
 
-  addTask():void {
-    if (this.nameOfTask!="" && this.inputTask!="" && this.inputDate!="")
-    {
-      this.$emit("onAddTask",[this.nameOfTask,this.inputTask,this.inputDate]);
-      this.nameOfTask="";
-      this.inputTask="";
-      this.inputDate="";     
+  addTask1():void {
+    this.activeModalAddTask=true;
+  }
+
+  closeModal():void {
+   this.activeModalAddTask=false; 
+  }
+
+  closeModalDetails():void {
+    this.activeModalDetails=false;  
+  }
+
+  addTask(nameOfTask:string,inputTask:string,inputDate:string):void {
+      this.$emit("onAddTask",[nameOfTask,inputTask,inputDate]);     
       this.$emit("incOpenTasks");
       this.indexOfNewTask++;
       this.isNewTask=true;
-    }
-    else alert ("Нельзя вводить пустые задачи")
-
   }
 
   deleteTask(index:number):void {
@@ -65,22 +89,21 @@ export default class tasks extends Vue
     this.isNewTask=false;
   }
 
+  mounted():void 
+  {
+    this.indexOfNewTask=this.myTask.length;
+    this.run();
+  }  
 
-    mounted():void 
-    {
-      this.indexOfNewTask=this.myTask.length;
-      this.run();
-    }  
+  enter():void 
+  {
+    this.idx=this.idx+1;
+  }
 
-    enter():void 
-    {
-      this.idx=this.idx+1;
-    }
-
-    run():void 
-    {
-      this.idx=1;
-    }
+  run():void 
+  {
+    this.idx=1;
+  }
 
 }
 </script>

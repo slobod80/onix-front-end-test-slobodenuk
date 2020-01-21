@@ -20,9 +20,11 @@
         @onDialog="onDialog($event)",
         @onAddTask="onAddTask($event)",
         @incOpenTasks="incOpenTasks",
+        @drug="drug",
         @onChangeStatusOfTask="onChangeStatusOfTask($event)",
         @decOpenTasks="decOpenTasks"
-        :myTask="myTask")
+        :myTask="myTask"
+        :statusOfTask="statusOfTask")
 </template>
 
 <script lang="ts">
@@ -52,12 +54,24 @@ export default class Header extends Vue {
       }
   }
 
+  drug(drugElementId:number,whereTo:string,whereFrom:string):void {
+    //alert("Элемент - "+drugElementId+wrereDrop);
+    if (whereTo=="todo" && whereFrom=="done") alert("Нельзя перемезать задачи из Done в ToDo!!!");
+      else
+      {
+        if (whereTo=="done") this.myTask[drugElementId].status=this.statusOfTask.done;
+        if (whereTo=="todo") this.myTask[drugElementId].status=this.statusOfTask.todo;
+        if (whereTo=="inprogress") this.myTask[drugElementId].status=this.statusOfTask.inprogress;        
+      }
+
+  }
+
   onDialog(index:number):void {
     this.$emit("onDialog",index)
   }
 
   onAddTask(nameOfTask:string[]):void {
-    this.myTask.push({nameOfTask:nameOfTask[0], myTask:nameOfTask[1], dateTask:nameOfTask[2],status:this.statusOfTask.todo});
+    this.myTask.push({id:this.myTask.length,nameOfTask:nameOfTask[0], myTask:nameOfTask[1], dateTask:nameOfTask[2],status:this.statusOfTask.todo});
   }
 
   onDeleteTask(index:number):void {
@@ -75,10 +89,10 @@ export default class Header extends Vue {
   created():void
   {
     this.myTask=  [
-                {nameOfTask:"Name of task1",myTask:"My task1", dateTask:"01/01/01",status:this.statusOfTask.todo},
-                {nameOfTask:"Name of task2",myTask:"My task2", dateTask:"02/02/02",status:this.statusOfTask.inprogress},
-                {nameOfTask:"Name of task3",myTask:"My task3", dateTask:"03/03/03",status:this.statusOfTask.done},
-                {nameOfTask:"Name of task4",myTask:"My task4", dateTask:"04/04/04",status:this.statusOfTask.done}
+                {id:0,nameOfTask:"Name of task1",myTask:"My task1", dateTask:"01/01/01",status:this.statusOfTask.todo},
+                {id:1,nameOfTask:"Name of task2",myTask:"My task2", dateTask:"02/02/02",status:this.statusOfTask.inprogress},
+                {id:2,nameOfTask:"Name of task3",myTask:"My task3", dateTask:"03/03/03",status:this.statusOfTask.done},
+                {id:3,nameOfTask:"Name of task4",myTask:"My task4", dateTask:"04/04/04",status:this.statusOfTask.done}
                   ]
   }
 
