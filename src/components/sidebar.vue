@@ -312,6 +312,11 @@ table {
 }
 
 @media (max-width: 900px) {
+
+.left-size {
+  display:none;
+}
+
 .first::after {
   left: 170px;
   top:30px;

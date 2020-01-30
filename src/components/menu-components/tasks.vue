@@ -6,12 +6,11 @@
         .flex-task-container
           transition-group( name="item" @after-enter="enter")
             tr(v-for="(item,index) in myTask" :key="index+1"
-              v-if=" index<idx "
-              @dblclick="editTask(index)"
+              v-if=" index<idx "              
               v-bind:class="[index==indexOfNewTask-1 && isNewTask ? 'new-task' : '']")
-              td(style="width:20%") {{myTask[index].nameOfTask}}
+              td.status(style="width:20%" @click="editTask(index)") {{myTask[index].nameOfTask}}
               td(style="width:45%") {{myTask[index].myTask}}
-              td(style="width:18%") {{myTask[index].dateTask}}
+              td(style="width:18%") {{myTask[index].dateTask | dateTask}}
               td.status(style="width:15%" @click="changeStatusOfTask(index)") {{myTask[index].status}}
               button(type="button" @click="deleteTask(index)") X
         button(type="submit" 

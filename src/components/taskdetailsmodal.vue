@@ -24,7 +24,7 @@
                 v-model="inputTask")
 
             p Дата окончания
-            textarea(rows="1" cols="45" 
+            input(type="date"
                 @input="input"
                 v-bind:disabled="isEdit ? false:true"
                 v-model="inputDate")
@@ -61,6 +61,7 @@ export default class taskDetailsModal extends Vue
   isChanged:boolean=false;
   nameOfButton:string="Edit";
   selected:string="To do";
+  moment=require("moment");
   myStatusOfTask=
     {
     todo:"To do",
@@ -84,7 +85,7 @@ export default class taskDetailsModal extends Vue
         this.isEdit=!this.isEdit;
         this.nameOfTask=this.myTask[this.idTask].nameOfTask;
         this.inputTask=this.myTask[this.idTask].myTask;
-        this.inputDate=this.myTask[this.idTask].dateTask;
+        this.inputDate=this.moment(this.myTask[this.idTask].dateTask,"YYYY-MM-DD").format("YYYY-MM-DD");
         this.statusOfTask=this.myTask[this.idTask].status;
         this.selected=this.myTask[this.idTask].status;
       }

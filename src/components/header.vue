@@ -55,7 +55,6 @@ export default class Header extends Vue {
   }
 
   drug(drugElementId:number,whereTo:string,whereFrom:string):void {
-    //alert("Элемент - "+drugElementId+wrereDrop);
     if (whereTo=="todo" && whereFrom=="done") alert("Нельзя перемезать задачи из Done в ToDo!!!");
       else
       {
@@ -89,10 +88,14 @@ export default class Header extends Vue {
   created():void
   {
     this.myTask=  [
-                {id:0,nameOfTask:"Name of task1",myTask:"My task1", dateTask:"01/01/01",status:this.statusOfTask.todo},
-                {id:1,nameOfTask:"Name of task2",myTask:"My task2", dateTask:"02/02/02",status:this.statusOfTask.inprogress},
-                {id:2,nameOfTask:"Name of task3",myTask:"My task3", dateTask:"03/03/03",status:this.statusOfTask.done},
-                {id:3,nameOfTask:"Name of task4",myTask:"My task4", dateTask:"04/04/04",status:this.statusOfTask.done}
+                {id:0,nameOfTask:"Name of task-1",myTask:"My task-1", dateTask:"2019-12-25",status:this.statusOfTask.todo},
+                {id:1,nameOfTask:"Name of task-2",myTask:"My task-2", dateTask:"2019-12-30",status:this.statusOfTask.inprogress},
+                {id:2,nameOfTask:"Name of task-3",myTask:"My task-3", dateTask:"2020-01-05",status:this.statusOfTask.done},
+                {id:3,nameOfTask:"Name of task-4",myTask:"My task-4", dateTask:"2020-01-10",status:this.statusOfTask.inprogress},
+                {id:4,nameOfTask:"Name of task-5",myTask:"My task-5", dateTask:"2020-01-15",status:this.statusOfTask.inprogress},
+                {id:5,nameOfTask:"Name of task-6",myTask:"My task-6", dateTask:"2020-01-20",status:this.statusOfTask.todo},
+                {id:6,nameOfTask:"Name of task-7",myTask:"My task-7", dateTask:"2020-01-25",status:this.statusOfTask.todo},
+                {id:7,nameOfTask:"Name of task-8",myTask:"My task-8", dateTask:"2020-02-28",status:this.statusOfTask.done}
                   ]
   }
 

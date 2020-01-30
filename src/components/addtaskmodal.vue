@@ -5,7 +5,7 @@
             p Введите задачу
             input(v-model.trim="nameOfTask" placeholder="Имя задачи")
             input(v-model.trim="inputTask" placeholder="Задача")
-            input(v-model.trim="inputDate" placeholder="Дата окончания")
+            input(type="date" v-model.trim="inputDate")
             button(type="submit" @click="addTask") Добавить задачу
             button(@click="closeModal") Закрыть окно
 </template>
@@ -25,12 +25,15 @@ export default class addTaskModal extends Vue
   nameOfTask:string="";
   inputTask:string="";
   inputDate:string="";
+  moment=require("moment");
+
 
   closeModal():void {
     this.$emit("closeModal")
   }
 
   addTask():void {  
+    this.moment().locale("ru");
     if (this.nameOfTask!="" && this.inputTask!="" && this.inputDate!="")
     {
       this.$emit("addTask",this.nameOfTask,this.inputTask,this.inputDate);

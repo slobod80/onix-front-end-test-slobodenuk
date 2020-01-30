@@ -10,6 +10,7 @@ import files from "./components/menu-components/files.vue";
 import stub from "./components/menu-components/stub.vue";
 import error404 from "./components/menu-components/error404.vue"
 
+
 const routes = [
     { path: '/tasks', component: tasks},
     { path: '/kanban', component: kanban },
@@ -23,6 +24,12 @@ const routes = [
 Vue.use(Router);
 const router = new Router({routes});
 var data = { assd: 1 }
+var moment=require("moment");
+
+Vue.filter('dateTask', function (value:string):string {
+  return moment(value,"YYYY-MM-DD").format("DD.MM.YYYY");
+})
+
 
 var vm=new Vue({
 	router,
