@@ -10,9 +10,9 @@
           input(type="text" v-model="filter")
         br
         b Поиск карточек по периоду
-          input(type="date" v-model="fromDate")
+          input(type="date" v-model="fromDate" @change="checkFromDate")
           span   до  
-          input(type="date" v-model="toDate")
+          input(type="date" v-model="toDate" @change="checkToDate")
         br
         hr
         .flex-task-container
@@ -50,7 +50,7 @@
                   div.statusDone(
                     draggable=true
                     @click="editTask(getMyDoneTasks[index].id)") {{getMyDoneTasks[index].nameOfTask}} - {{getMyDoneTasks[index].dateTask | dateTask}}
-
+          hr
         taskDetailsModal(
             :activeModalDetails="activeModalDetails"
             v-if="activeModalDetails"
@@ -81,7 +81,7 @@ export default class tasks extends Vue
   whereFrom:string="";
   moment=require("moment");
   fromDate:string="";
-  toDate:string="2020-12-31";
+  toDate:string="";
   filter:string="Task";
   activeModalDetails:boolean=false;
 
@@ -94,50 +94,48 @@ export default class tasks extends Vue
 
   mounted():void {
     this.fromDate=this.moment("2019-12-01").format("YYYY-MM-DD");
-    this.toDate=this.moment().add(2,'M').format("YYYY-MM-DD")
+    this.toDate=this.moment().add(2,'M').format("YYYY-MM-DD");
   }
 
+  checkToDate():void {
+    if (this.toDate=="") 
+      {
+        alert("Пустая дата, установливаю по умолчанию до 31.03.2020 !");
+        this.toDate=this.moment().add(2,'M').format("YYYY-MM-DD");
+      }
+  }
 
-  get getMyToDoTasks():Itask[] {
-    let myTodoTasks:Itask[]=[];
+  checkFromDate():void {
+    if (this.fromDate=="") 
+      {
+        alert("Пустая дата, установливаю по умолчанию 01.12.2019 !");
+        this.fromDate=this.moment("2019-12-01").format("YYYY-MM-DD");
+      }          
+  }
+
+  get getFilteredTasks():Itask[] {
+    let myFilterdTasks:Itask[]=[];
     for (var property in this.myTask)
       { 
-        if (this.myTask[property].status==this.myStatusOfTask.todo 
-          && this.myTask[property].nameOfTask.toLowerCase().includes(this.filter.toLowerCase())
+        if (this.myTask[property].nameOfTask.toLowerCase().includes(this.filter.toLowerCase())
           && this.moment(this.myTask[property].dateTask).isBetween(this.moment(this.fromDate),this.moment(this.toDate),null,'[]'))
         {
-          myTodoTasks.push(this.myTask[property]);
+          myFilterdTasks.push(this.myTask[property]);
         }
       }
-    return myTodoTasks;
+    return myFilterdTasks;
+  }
+
+  get getMyToDoTasks():Itask[] {
+    return this.getFilteredTasks.filter(getFilteredTasks=>getFilteredTasks.status===this.myStatusOfTask.todo);
   }
 
   get getMyInProgressTasks():Itask[] {
-    let myTodoTasks:Itask[]=[];
-    for (var property in this.myTask)
-      {  
-        if (this.myTask[property].status==this.myStatusOfTask.inprogress 
-          && this.myTask[property].nameOfTask.toLowerCase().includes(this.filter.toLowerCase())
-          && this.moment(this.myTask[property].dateTask).isBetween(this.moment(this.fromDate),this.moment(this.toDate),null,'[]'))
-        {
-          myTodoTasks.push(this.myTask[property]);
-        }
-      }
-    return myTodoTasks;
+    return this.getFilteredTasks.filter(getFilteredTasks=>getFilteredTasks.status===this.myStatusOfTask.inprogress);
   }
 
   get getMyDoneTasks():Itask[] {
-    let myTodoTasks:Itask[]=[];
-    for (var property in this.myTask)
-      {  
-        if (this.myTask[property].status==this.myStatusOfTask.done 
-          && this.myTask[property].nameOfTask.toLowerCase().includes(this.filter.toLowerCase())
-          && this.moment(this.myTask[property].dateTask).isBetween(this.moment(this.fromDate),this.moment(this.toDate),null,'[]'))
-        {
-          myTodoTasks.push(this.myTask[property]);
-        }
-      }
-    return myTodoTasks;
+    return this.getFilteredTasks.filter(getFilteredTasks=>getFilteredTasks.status===this.myStatusOfTask.done);
   }
 
   drag(index:number,where:string):void {

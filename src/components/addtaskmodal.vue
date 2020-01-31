@@ -42,7 +42,7 @@ export default class addTaskModal extends Vue
       this.inputTask="";
       this.inputDate="";     
     }
-    else alert ("Нельзя вводить пустые задачи");
+    else alert ("Нельзя вводить пустые задачи !");
   }
 
 }
