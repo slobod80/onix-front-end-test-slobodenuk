@@ -43,6 +43,7 @@
 
 import { Component, Prop, Vue } from "vue-property-decorator";
 import {Itask} from "./menu-components/types/task";
+import tasksname from "../store/modules/tasks"
 
 
 @Component
@@ -106,6 +107,9 @@ export default class taskDetailsModal extends Vue
     this.myTask[this.idTask].myTask=this.inputTask;
     this.myTask[this.idTask].dateTask=this.inputDate;
     this.myTask[this.idTask].status=this.selected;
+
+    tasksname.editTask([this.idTask,this.inputTask,this.inputDate,this.selected]);
+    
     this.isEdit=false;
     this.isChanged=false;
     this.nameOfButton="Edit"; 

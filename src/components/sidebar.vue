@@ -24,11 +24,14 @@
       li
         a(href="#") Notifications
         div.three 
-          div.three1 {{notification}} 
+          div.three1 {{notification}}
+
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+import activityname from "../store/modules/activity"
+import tasksname from "../store/modules/activity"
 
 @Component
 
@@ -37,22 +40,22 @@ export default class leftColumn extends Vue
         @Prop() notification!: number;
         @Prop() openTasks!: number;
 
-        project:string="PROJECTUS";
-        author:string="Jean Gonsales";
+        project:string="";
+        author:string="";
+        prof:string="";
+        completedTask:number=0;
 
-        prof:string="Product Owner";
-
-        completedTask:number=372;
-
+mounted():void {
+  this.project=activityname.project;
+  this.author=activityname.author;
+  this.prof=activityname.prof;
+  this.completedTask=activityname.completedTask;
+}
 
         click1 ():void {
           if (confirm ("Are you sure you want to change the number of tasks?")) 
             {  
                 alert("Нельзя так уменьшать задачи");
-                //if (this.openTasks>0) 
-                //  {
-                //      this.completedTask++;
-                //      this.openTasks--;
                   }
                 else alert ("Открытых задач уже нет. Отдыхаем!")
             

@@ -33,6 +33,7 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 import {Itask} from "../../components/menu-components/types/task";
 import addTaskModal from "../../components/addtaskmodal.vue";
 import taskDetailsModal from "../../components/taskdetailsmodal.vue";
+import tasksname from "../../store/modules/tasks"
 
 @Component({
   components: {
@@ -42,8 +43,10 @@ import taskDetailsModal from "../../components/taskdetailsmodal.vue";
 })
 export default class tasks extends Vue 
 {
-  @Prop() myTask!:Itask[];
+//  @Prop() myTask!:Itask[];
 
+  moment=require("moment");
+  myTask!:Itask[];
   idx:number=0;
   indexOfNewTask:number=0;
   isNewTask:boolean=false;
@@ -59,7 +62,9 @@ export default class tasks extends Vue
   }
 
   changeStatusOfTask(index:number):void {
-    this.$emit("onChangeStatusOfTask",index);
+//    this.$emit("onChangeStatusOfTask",index);
+  tasksname.changeStatus(index);
+
   }
 
   addTask1():void {
@@ -75,21 +80,30 @@ export default class tasks extends Vue
   }
 
   addTask(nameOfTask:string,inputTask:string,inputDate:string):void {
-      this.$emit("onAddTask",[nameOfTask,inputTask,inputDate]);     
-      this.$emit("incOpenTasks");
-      this.indexOfNewTask++;
-      this.isNewTask=true;
+//      this.$emit("onAddTask",[nameOfTask,inputTask,inputDate]);     
+//      this.$emit("incOpenTasks");
+    tasksname.addTask([nameOfTask,inputTask,inputDate]);
+    this.indexOfNewTask++;
+    this.isNewTask=true;
   }
 
+
+
   deleteTask(index:number):void {
-    this.$emit("onDeleteTask",index);
-    this.$emit("decOpenTasks");
+//    this.$emit("onDeleteTask",index);
+//    this.$emit("decOpenTasks");
+    tasksname.deleteTask(index);
     this.indexOfNewTask--;
     this.isNewTask=false;
   }
 
+  created():void {
+    this.myTask=tasksname.myTask;
+  }
+
   mounted():void 
   {
+    this.myTask=tasksname.myTask;
     this.indexOfNewTask=this.myTask.length;
     this.run();
   }  

@@ -17,6 +17,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import {Idialog} from "../../components/menu-components/types/dialog"
+import activityname from "../../store/modules/activity"
 
 
 
@@ -25,16 +26,16 @@ import {Idialog} from "../../components/menu-components/types/dialog"
 export default class activity extends Vue 
 {
 
-  photo:string[]=["photo1.jpg","photo2.jpg","photo3.jpg","photo4.jpg"];
+  photo:string[]=[];
+  dialogdata:string="";
+  dialog:Idialog[]=[]
 
-  dialogdata:string="TODAY";
 
-  dialog:Idialog[]=[
-              {log:"Darika Samak mark as done Listing on Product Hunt so that we can reach as many potential users", time:"8:40 PM",icon_photo:"Icon@3x.svg"},
-              {log:"Emilee Simchenko commented on Account for teams and personal in bottom style",time:"7:32 PM",icon_photo:"icon2.svg"},
-              {log:"During a project build, it is necessary to evaluate the product design and development against project requirements and outcomes", time:"",icon_photo:"no-image.png"},
-              {log:"Darika Samak uploaded 4 files on An option to search in current projects or in all projects",time:"6:02 PM",icon_photo:"icon3.png"}
-              ]
+mounted():void {
+  this.photo=activityname.photo;
+  this.dialogdata=activityname.dialogdata;
+  this.dialog=activityname.dialog;
+}
 
   click2(index:number):void
     {     

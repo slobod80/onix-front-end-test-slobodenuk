@@ -19,7 +19,7 @@ import {Itask} from "./menu-components/types/task";
 
 export default class addTaskModal extends Vue 
 {
-  @Prop() myTask!:Itask[];
+//  @Prop() myTask!:Itask[];
   @Prop() activeModalAddTask!:boolean;
 
   nameOfTask:string="";

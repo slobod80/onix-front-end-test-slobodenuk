@@ -31,12 +31,13 @@
 
 import { Component, Prop, Vue } from 'vue-property-decorator';
 import {Itask} from "./menu-components/types/task";
+import { namespace } from 'vuex-class'
 
 @Component
 
 export default class Header extends Vue {
 
-  myTask:Itask[]=  [];
+  myTask:Itask[]=[];
 
   statusOfTask=
   {
@@ -46,23 +47,23 @@ export default class Header extends Vue {
   };
 
   onChangeStatusOfTask(index:number):void {
-    switch (this.myTask[index].status) 
+/*    switch (this.myTask[index].status) 
       {
         case this.statusOfTask.todo: this.myTask[index].status=this.statusOfTask.inprogress;break;
         case this.statusOfTask.inprogress: this.myTask[index].status=this.statusOfTask.done;break;
         case this.statusOfTask.done: this.myTask[index].status=this.statusOfTask.todo;break;
-      }
+      }*/
   }
 
   drug(drugElementId:number,whereTo:string,whereFrom:string):void {
-    if (whereTo=="todo" && whereFrom=="done") alert("Нельзя перемезать задачи из Done в ToDo!!!");
+/*    if (whereTo=="todo" && whereFrom=="done") alert("Нельзя перемезать задачи из Done в ToDo!!!");
       else
       {
         if (whereTo=="done") this.myTask[drugElementId].status=this.statusOfTask.done;
         if (whereTo=="todo") this.myTask[drugElementId].status=this.statusOfTask.todo;
         if (whereTo=="inprogress") this.myTask[drugElementId].status=this.statusOfTask.inprogress;        
       }
-
+*/
   }
 
   onDialog(index:number):void {
@@ -85,19 +86,10 @@ export default class Header extends Vue {
     this.$emit("decOpenTasks");
   }
 
-  created():void
+/*  created():void
   {
-    this.myTask=  [
-                {id:0,nameOfTask:"Name of task-1",myTask:"My task-1", dateTask:"2019-12-25",status:this.statusOfTask.todo},
-                {id:1,nameOfTask:"Name of task-2",myTask:"My task-2", dateTask:"2019-12-30",status:this.statusOfTask.inprogress},
-                {id:2,nameOfTask:"Name of task-3",myTask:"My task-3", dateTask:"2020-01-05",status:this.statusOfTask.done},
-                {id:3,nameOfTask:"Name of task-4",myTask:"My task-4", dateTask:"2020-01-10",status:this.statusOfTask.inprogress},
-                {id:4,nameOfTask:"Name of task-5",myTask:"My task-5", dateTask:"2020-01-15",status:this.statusOfTask.inprogress},
-                {id:5,nameOfTask:"Name of task-6",myTask:"My task-6", dateTask:"2020-01-20",status:this.statusOfTask.todo},
-                {id:6,nameOfTask:"Name of task-7",myTask:"My task-7", dateTask:"2020-01-25",status:this.statusOfTask.todo},
-                {id:7,nameOfTask:"Name of task-8",myTask:"My task-8", dateTask:"2020-02-28",status:this.statusOfTask.done}
-                  ]
-  }
+    this.myTask=  [];
+  }*/
 
 }
 </script>

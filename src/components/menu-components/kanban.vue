@@ -50,6 +50,7 @@
                   div.statusDone(
                     draggable=true
                     @click="editTask(getMyDoneTasks[index].id)") {{getMyDoneTasks[index].nameOfTask}} - {{getMyDoneTasks[index].dateTask | dateTask}}
+          br        
           hr
         taskDetailsModal(
             :activeModalDetails="activeModalDetails"
@@ -60,9 +61,12 @@
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue , Watch} from "vue-property-decorator";
 import {Itask} from "../../components/menu-components/types/task";
 import taskDetailsModal from "../../components/taskdetailsmodal.vue";
+
+import tasksname from "../../store/modules/tasks"
+
 
 @Component({
   components: {
@@ -70,11 +74,11 @@ import taskDetailsModal from "../../components/taskdetailsmodal.vue";
   }
 })
 
-
 export default class tasks extends Vue 
 {  
-  @Prop() myTask!:Itask[];
+//  @Prop() myTask!:Itask[];
 
+  myTask!:Itask[];
   idTask:number=0;
   inputTask:string="";
   drugElementId:number=0;
@@ -92,9 +96,24 @@ export default class tasks extends Vue
     done:"Done"
   };
 
+  created():void {
+    this.myTask=tasksname.myTask;
+  }
+
+  edit1():void {
+    this.filter=tasksname.getMessage
+    alert(this.filter);
+  }
+
   mounted():void {
     this.fromDate=this.moment("2019-12-01").format("YYYY-MM-DD");
     this.toDate=this.moment().add(2,'M').format("YYYY-MM-DD");
+    if (localStorage.filter) {this.filter=localStorage.filter;}
+  }
+
+  @Watch('filter')
+  onFilterChanged(val: string, oldVal: string) {
+    localStorage.filter=val;
   }
 
   checkToDate():void {
@@ -144,15 +163,19 @@ export default class tasks extends Vue
   }
 
   dropInDone():void {
-    this.$emit("drug",this.drugElementId,"done",this.whereFrom);
+    //this.$emit("drug",this.drugElementId,"done",this.whereFrom);
+    tasksname.changeStatusDrug([this.drugElementId,"Done"]);
   }
 
   dropToDo():void {
-    this.$emit("drug",this.drugElementId,"todo",this.whereFrom);
+    //this.$emit("drug",this.drugElementId,"todo",this.whereFrom);
+    if (this.whereFrom=="done") alert("Нельзя переносить из Done в Todo!");
+    else tasksname.changeStatusDrug([this.drugElementId,"To do"]);
   }
 
   dropInProgress():void {
-    this.$emit("drug",this.drugElementId,"inprogress",this.whereFrom);
+    //this.$emit("drug",this.drugElementId,"inprogress",this.whereFrom);
+    tasksname.changeStatusDrug([this.drugElementId,"In progress"]);
   }
 
   editTask(id1:number):void {
