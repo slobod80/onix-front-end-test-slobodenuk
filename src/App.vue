@@ -5,8 +5,11 @@
 
 <script lang="ts"> 
 
-import { Component, Vue } from 'vue-property-decorator';
+import { Component, Vue , Watch} from 'vue-property-decorator';
 import Layout from './layout.vue';
+import tasksApi from "./service/tasksApi"
+import {Itask} from "./components/menu-components/types/task"
+import store from "./store/index"
 
 @Component({
   name:"app",
@@ -17,6 +20,8 @@ import Layout from './layout.vue';
 
 export default class App extends Vue {
 }
+
+
 
 </script>
 

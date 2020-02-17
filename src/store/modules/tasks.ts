@@ -2,12 +2,14 @@ import {VuexModule, Module, getModule, MutationAction, Mutation, Action} from "v
 import store from "../index"
 import {Itask} from "@/components/menu-components/types/task"
 import {statusOfTask} from "../../components/menu-components/types/statusoftask"
+import taskapi from "../../service/tasksApi"
+import axios from "axios";
 
 @Module({
   namespaced:true,
-  name:'tasksname',
+  name:"taskname1",
   dynamic:true,
-  store,
+  store:store
 })
 
 class TaskModule extends VuexModule {
@@ -18,31 +20,26 @@ class TaskModule extends VuexModule {
     done:"Done"
   };
 
-  myTask:Itask[]=
-  [
-    {id:0,nameOfTask:"Name of task-1",myTask:"My task-1", dateTask:"2019-12-25",status:this.statusOfTask.todo},
-    {id:1,nameOfTask:"Name of task-2",myTask:"My task-2", dateTask:"2019-12-30",status:this.statusOfTask.inprogress},
-    {id:2,nameOfTask:"Name of task-3",myTask:"My task-3", dateTask:"2020-01-05",status:this.statusOfTask.done},
-    {id:3,nameOfTask:"Name of task-4",myTask:"My task-4", dateTask:"2020-01-10",status:this.statusOfTask.inprogress},
-    {id:4,nameOfTask:"Name of task-5",myTask:"My task-5", dateTask:"2020-01-15",status:this.statusOfTask.inprogress},
-    {id:5,nameOfTask:"Name of task-6",myTask:"My task-6", dateTask:"2020-01-20",status:this.statusOfTask.todo},
-    {id:6,nameOfTask:"Name of task-7",myTask:"My task-7", dateTask:"2020-01-25",status:this.statusOfTask.todo},
-    {id:7,nameOfTask:"Name of task-8",myTask:"My task-8", dateTask:"2020-02-28",status:this.statusOfTask.done}
-  ]
+  myTask:Itask[]=[];
   message:string="sdsds"
 
-@Mutation addTask(payload:any):void {
-  //Так конечно делать нельзя, но я буду получать ID c сервера...
-  alert(payload[0]);
-  this.myTask.push({id:this.myTask.length,nameOfTask:payload[0], myTask:payload[1], dateTask:payload[2],status:this.statusOfTask.todo});
+//***********DELETE TASK***********
+@Mutation DELETE_TASK(id:number) {
+let i=0;
+let indexToDelete=0;
+for(i=0;i<this.myTask.length;i++)
+  if (this.myTask[i].id==id) indexToDelete=i;
+
+  this.myTask.splice(indexToDelete,1);
 }
 
-
-@Mutation deleteTask(index:number) {
-  this.myTask.splice(index,1);
+@Action async ACT_DELETE_TASK(id:number) {
+  const response = await taskapi.deteleTask(id);
+  if (response==200) this.DELETE_TASK(id);
 }
 
-@Mutation changeStatus(payload:number):void {
+//***********EDIT TASK***********
+@Mutation changeStatus(payload:any):void {
     switch (this.myTask[payload].status) 
       {
         case statusOfTask.todo: this.myTask[payload].status=statusOfTask.inprogress;break;
@@ -56,14 +53,64 @@ class TaskModule extends VuexModule {
 }
 
 
-@Mutation editTask(payload:any):void {
-  this.myTask[payload[0]].myTask=payload[1];
-  this.myTask[payload[0]].dateTask=payload[2];
-  this.myTask[payload[0]].status=payload[3];
+@Action async ACT_CHANGE_STATUS(payload:any) {
+  const response = await taskapi.editStatus([payload]);
+  if (response==200) {
+    this.EDIT_TASK([payload]);
+  }  
 }
 
+@Mutation EDIT_TASK(payload:any):void {
+  let i=0;
+  for(i=0;i<this.myTask.length;i++)
+    if (this.myTask[i].id==payload[0][0]) 
+    {
+      this.myTask[i].nameOfTask=payload[0][1];
+      this.myTask[i].myTask=payload[0][2];
+      this.myTask[i].dateTask=payload[0][3];
+      this.myTask[i].status=payload[0][4];
+    }
+}
 
-    get getMessage() {
+@Action async ACT_EDIT_TASK(payload:any) {
+  const response = await taskapi.editTask([payload]);
+  if (response==200) {
+    this.EDIT_TASK([payload]);
+  }
+}
+//***********GET ALL TASKS FROM API
+@Mutation getAllTask(payload:any) {
+  this.myTask=payload;
+}
+
+@Action async GET_TASKS_FROM_API() {
+  const response = await taskapi.getTasksFromApi();
+  this.getAllTask(response);
+}
+//***********ADD NEW TASK API
+
+@Mutation ADD_TASK(payload:any):void 
+{
+  this.myTask.push(  {
+    id:payload[0],
+    nameOfTask:payload[1], 
+    myTask:payload[2], 
+    dateTask:payload[3],
+    status:this.statusOfTask.todo}  )
+}
+
+@Action async ACT_ADD_TASK(payload:any) 
+{
+  const response = await taskapi.addTask(payload[0], payload[1], payload[2], payload[3]);
+  if (response==200) this.ADD_TASK([payload[0], payload[1], payload[2], payload[3]]);
+}
+//***********GETTERS
+
+get GET_TASKS():any {
+  return this.myTask;
+}
+
+get getMessage() {
       return this.message;
     }
 }

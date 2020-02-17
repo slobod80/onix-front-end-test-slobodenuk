@@ -2,10 +2,10 @@
       .modal(v-if="activeModalDetails")
         .modal-background
           .modal-content 
-            p Название задачи: {{this.myTask[idTask].nameOfTask}}
-            p Описание задачи: {{this.myTask[idTask].myTask}}
-            p Дата окончания: {{this.myTask[idTask].dateTask}}
-            p Статус: {{this.myTask[idTask].status}}
+            p Название задачи: {{this.myTask[index1].nameOfTask}}
+            p Описание задачи: {{this.myTask[index1].myTask}}
+            p Дата окончания: {{this.myTask[index1].dateTask}}
+            p Статус: {{this.myTask[index1].status}}
             br
             b Редактировать задачу 
               input(type="button" 
@@ -43,14 +43,14 @@
 
 import { Component, Prop, Vue } from "vue-property-decorator";
 import {Itask} from "./menu-components/types/task";
-import tasksname from "../store/modules/tasks"
+import taskname1 from "../store/modules/tasks"
 
 
 @Component
 
 export default class taskDetailsModal extends Vue 
 {
-  @Prop() myTask!:Itask[];
+  //@Prop() myTask!:Itask[];
   @Prop() activeModalDetails!:boolean;
   @Prop() idTask!:number;
 
@@ -63,6 +63,8 @@ export default class taskDetailsModal extends Vue
   nameOfButton:string="Edit";
   selected:string="To do";
   moment=require("moment");
+  myTask:Itask[]=[];
+  index1:number=0;
   myStatusOfTask=
     {
     todo:"To do",
@@ -84,11 +86,11 @@ export default class taskDetailsModal extends Vue
       {
         this.nameOfButton="Cancel";
         this.isEdit=!this.isEdit;
-        this.nameOfTask=this.myTask[this.idTask].nameOfTask;
-        this.inputTask=this.myTask[this.idTask].myTask;
-        this.inputDate=this.moment(this.myTask[this.idTask].dateTask,"YYYY-MM-DD").format("YYYY-MM-DD");
-        this.statusOfTask=this.myTask[this.idTask].status;
-        this.selected=this.myTask[this.idTask].status;
+        this.nameOfTask=this.myTask[this.index1].nameOfTask;
+        this.inputTask=this.myTask[this.index1].myTask;
+        this.inputDate=this.moment(this.myTask[this.index1].dateTask,"YYYY-MM-DD").format("YYYY-MM-DD");
+        this.statusOfTask=this.myTask[this.index1].status;
+        this.selected=this.myTask[this.index1].status;
       }
     else
       {
@@ -104,11 +106,11 @@ export default class taskDetailsModal extends Vue
   }
 
   saveTask():void {
-    this.myTask[this.idTask].myTask=this.inputTask;
-    this.myTask[this.idTask].dateTask=this.inputDate;
-    this.myTask[this.idTask].status=this.selected;
-
-    tasksname.editTask([this.idTask,this.inputTask,this.inputDate,this.selected]);
+    this.myTask[this.index1].nameOfTask=this.nameOfTask;
+    this.myTask[this.index1].myTask=this.inputTask;
+    this.myTask[this.index1].dateTask=this.inputDate;
+    this.myTask[this.index1].status=this.selected;
+    taskname1.ACT_EDIT_TASK([this.idTask,this.nameOfTask,this.inputTask,this.inputDate,this.selected]);
     
     this.isEdit=false;
     this.isChanged=false;
@@ -119,6 +121,15 @@ export default class taskDetailsModal extends Vue
     this.statusOfTask=""; 
     this.closeModal();
   }
+
+mounted():void {
+  let i=0;
+  for(i=0;i<this.myTask.length;i++) if (this.myTask[i].id==this.idTask) this.index1=i;
+}
+
+created():void {
+   this.myTask=taskname1.myTask; 
+}
 
 }
 </script>

@@ -5,14 +5,14 @@
       .flex-task
         .flex-task-container
           transition-group( name="item" @after-enter="enter")
-            tr(v-for="(item,index) in myTask" :key="index+1"
+            tr(v-for="(item,index) in myTask" :key="myTask[index].id"
               v-if=" index<idx "              
               v-bind:class="[index==indexOfNewTask-1 && isNewTask ? 'new-task' : '']")
-              td.status(style="width:20%" @click="editTask(index)") {{myTask[index].nameOfTask}}
+              td.status(style="width:20%" @click="editTask(myTask[index].id)") {{myTask[index].nameOfTask}}
               td(style="width:45%") {{myTask[index].myTask}}
               td(style="width:18%") {{myTask[index].dateTask | dateTask}}
-              td.status(style="width:15%" @click="changeStatusOfTask(index)") {{myTask[index].status}}
-              button(type="button" @click="deleteTask(index)") X
+              td.status(style="width:15%" @click="changeStatusOfTask(myTask[index].id)") {{myTask[index].status}}
+              button(type="button" @click="deleteTask(myTask[index].id)") X
         button(type="submit" 
           @click="addTask1") Добавить задачу
         addTaskModal(
@@ -24,16 +24,17 @@
             :activeModalDetails="activeModalDetails"
             v-if="activeModalDetails"
             :idTask="idTask"
-            :myTask="myTask"
             @closeModalDetails="closeModalDetails")
 </template>
 
 <script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue ,Watch} from "vue-property-decorator";
 import {Itask} from "../../components/menu-components/types/task";
 import addTaskModal from "../../components/addtaskmodal.vue";
 import taskDetailsModal from "../../components/taskdetailsmodal.vue";
-import tasksname from "../../store/modules/tasks"
+import taskname1 from "../../store/modules/tasks"
+import taskapi from "../../service/tasksApi"
+import axios from "axios"
 
 @Component({
   components: {
@@ -44,9 +45,14 @@ import tasksname from "../../store/modules/tasks"
 export default class tasks extends Vue 
 {
 //  @Prop() myTask!:Itask[];
-
+  statusOfTask=
+  {
+    todo:"To do",
+    inprogress:"In progress",
+    done:"Done"
+  };
   moment=require("moment");
-  myTask!:Itask[];
+  myTask:Itask[]=[];
   idx:number=0;
   indexOfNewTask:number=0;
   isNewTask:boolean=false;
@@ -57,14 +63,20 @@ export default class tasks extends Vue
 
   editTask(index:number):void {
     this.idTask=index;
-    this.inputTask=this.myTask[index].myTask;
     this.activeModalDetails=true;
   }
 
-  changeStatusOfTask(index:number):void {
-//    this.$emit("onChangeStatusOfTask",index);
-  tasksname.changeStatus(index);
-
+  changeStatusOfTask(id:number):void {
+      let i=0;
+      let index1=0;
+      for(i=0;i<this.myTask.length;i++) if (this.myTask[i].id==id) index1=i;
+      switch (this.myTask[index1].status) 
+      {
+      case this.statusOfTask.todo: this.myTask[index1].status=this.statusOfTask.inprogress;break;
+      case this.statusOfTask.inprogress: this.myTask[index1].status=this.statusOfTask.done;break;
+      case this.statusOfTask.done: this.myTask[index1].status=this.statusOfTask.todo;break;
+      }
+    taskname1.ACT_EDIT_TASK([id,this.myTask[index1].nameOfTask,this.myTask[index1].myTask,this.myTask[index1].dateTask,this.myTask[index1].status]);    
   }
 
   addTask1():void {
@@ -75,38 +87,35 @@ export default class tasks extends Vue
    this.activeModalAddTask=false; 
   }
 
+@Watch('activeModalAddTask')
+  onactiveModalAddTaskChanged(val: string, oldVal: string) {
+  }
+
   closeModalDetails():void {
     this.activeModalDetails=false;  
   }
 
   addTask(nameOfTask:string,inputTask:string,inputDate:string):void {
-//      this.$emit("onAddTask",[nameOfTask,inputTask,inputDate]);     
-//      this.$emit("incOpenTasks");
-    tasksname.addTask([nameOfTask,inputTask,inputDate]);
+
     this.indexOfNewTask++;
     this.isNewTask=true;
   }
 
-
-
-  deleteTask(index:number):void {
-//    this.$emit("onDeleteTask",index);
-//    this.$emit("decOpenTasks");
-    tasksname.deleteTask(index);
+async deleteTask(id:number) {
     this.indexOfNewTask--;
     this.isNewTask=false;
+    await taskname1.ACT_DELETE_TASK(id);
   }
 
-  created():void {
-    this.myTask=tasksname.myTask;
-  }
-
-  mounted():void 
+async mounted() 
   {
-    this.myTask=tasksname.myTask;
-    this.indexOfNewTask=this.myTask.length;
-    this.run();
+        await taskname1.GET_TASKS_FROM_API();
+        this.myTask=await taskname1.GET_TASKS;
+        this.run();
   }  
+
+created() {
+}
 
   enter():void 
   {
@@ -117,6 +126,10 @@ export default class tasks extends Vue
   {
     this.idx=1;
   }
+
+updated():void {
+  this.myTask=taskname1.GET_TASKS;
+}
 
 }
 </script>

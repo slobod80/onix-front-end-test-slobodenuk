@@ -3,6 +3,7 @@ import App from './App.vue'
 import Router from 'vue-router'
 import Vuex from 'vuex'
 import store from "./store/"
+import axios from "axios"
 
 import tasks from "./components/menu-components/tasks.vue";
 import kanban from "./components/menu-components/kanban.vue";

@@ -19,8 +19,6 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import {Idialog} from "../../components/menu-components/types/dialog"
 import activityname from "../../store/modules/activity"
 
-
-
 @Component
 
 export default class activity extends Vue 

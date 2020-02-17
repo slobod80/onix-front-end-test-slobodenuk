@@ -37,9 +37,11 @@
 
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import tasksname from "../../store/modules/tasks"
+import taskname1 from "../../store/modules/tasks"
 import {Itask} from "../menu-components/types/task"
 import taskDetails from "../menu-components/taskdetails.vue"
+import axios from "axios"
+import api from "../../service/tasksApi"
 
 @Component({
   components: {
@@ -49,7 +51,7 @@ import taskDetails from "../menu-components/taskdetails.vue"
 
 export default class calendar extends Vue 
 {
-  myTask!:Itask[];
+  myTask:Itask[]=[];
   month: string[] = ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябь","Октябрь","Ноябрь","Декабрь"];
   days: String[]=["ВС","ПН","ВТ","СР","ЧТ","ПТ","СБ"]
   currentMonth: number = 0;
@@ -78,23 +80,17 @@ export default class calendar extends Vue
 
   decYear():void {
     this.currentYear--;
-
   }
 
   incMonth():void {
     this.currentMonth++;
     if (this.currentMonth>11) this.currentMonth=0;
-
-  }
-
-  created() :void {
-    this.myTask=tasksname.myTask;
   }
 
   mounted():void {
+    this.myTask=taskname1.myTask;
     if (localStorage.currentMonth) this.currentMonth=localStorage.currentMonth;
     if (localStorage.currentYear) this.currentYear=localStorage.currentYear;
-    
   }
 
   decMonth():void {
@@ -143,7 +139,12 @@ export default class calendar extends Vue
     }
   }
 
- 
+async created() {
+  await taskname1.GET_TASKS_FROM_API();
+  this.myTask=await taskname1.GET_TASKS;
+} 
+
+
 
 }
 

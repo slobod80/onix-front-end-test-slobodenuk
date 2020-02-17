@@ -38,11 +38,14 @@ export default class taskDetails extends Vue
   }
 
   mounted():void {
-	this.myTask=tasksname.myTask;
-	this.nameOfTask=this.myTask[this.idTask].nameOfTask;
-	this.inputTask=this.myTask[this.idTask].myTask;
-	this.inputDate=this.myTask[this.idTask].dateTask;
-	this.statusOfTask=this.myTask[this.idTask].status;
+    this.myTask=tasksname.myTask;
+    let i=0;
+    let index1=0;
+    for(i=0;i<this.myTask.length;i++) if (this.myTask[i].id==this.idTask) index1=i;
+    this.nameOfTask=this.myTask[index1].nameOfTask;
+    this.inputTask=this.myTask[index1].myTask;
+    this.inputDate=this.myTask[index1].dateTask;
+    this.statusOfTask=this.myTask[index1].status;
   }
 
 }

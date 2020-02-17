@@ -14,6 +14,9 @@
 
 import { Component, Prop, Vue } from "vue-property-decorator";
 import {Itask} from "./menu-components/types/task";
+import axios from "axios";
+import taskapi from "../service/tasksApi"
+import taskname1 from "../store/modules/tasks"
 
 @Component
 
@@ -26,17 +29,18 @@ export default class addTaskModal extends Vue
   inputTask:string="";
   inputDate:string="";
   moment=require("moment");
+  myTask!:Itask;
 
 
   closeModal():void {
     this.$emit("closeModal")
   }
 
-  addTask():void {  
+  addTask() {  
     this.moment().locale("ru");
     if (this.nameOfTask!="" && this.inputTask!="" && this.inputDate!="")
     {
-      this.$emit("addTask",this.nameOfTask,this.inputTask,this.inputDate);
+      taskname1.ACT_ADD_TASK(  [Math.floor(Math.random() * Math.floor(10000)),this.nameOfTask,this.inputTask,this.inputDate]  );
       this.$emit("closeModal");     
       this.nameOfTask="";
       this.inputTask="";
@@ -44,6 +48,8 @@ export default class addTaskModal extends Vue
     }
     else alert ("Нельзя вводить пустые задачи !");
   }
+
+
 
 }
 </script>

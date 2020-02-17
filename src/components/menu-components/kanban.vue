@@ -64,8 +64,9 @@
 import { Component, Prop, Vue , Watch} from "vue-property-decorator";
 import {Itask} from "../../components/menu-components/types/task";
 import taskDetailsModal from "../../components/taskdetailsmodal.vue";
-
-import tasksname from "../../store/modules/tasks"
+import axios from "axios"
+import api from "../../service/tasksApi"
+import taskname1 from "../../store/modules/tasks"
 
 
 @Component({
@@ -76,9 +77,8 @@ import tasksname from "../../store/modules/tasks"
 
 export default class tasks extends Vue 
 {  
-//  @Prop() myTask!:Itask[];
 
-  myTask!:Itask[];
+  myTask:Itask[]=[];
   idTask:number=0;
   inputTask:string="";
   drugElementId:number=0;
@@ -96,19 +96,17 @@ export default class tasks extends Vue
     done:"Done"
   };
 
-  created():void {
-    this.myTask=tasksname.myTask;
-  }
-
   edit1():void {
-    this.filter=tasksname.getMessage
+    this.filter=taskname1.getMessage
     alert(this.filter);
   }
 
   mounted():void {
+    this.myTask=taskname1.myTask;
     this.fromDate=this.moment("2019-12-01").format("YYYY-MM-DD");
     this.toDate=this.moment().add(2,'M').format("YYYY-MM-DD");
     if (localStorage.filter) {this.filter=localStorage.filter;}
+    this.drugElementId=0;
   }
 
   @Watch('filter')
@@ -157,25 +155,31 @@ export default class tasks extends Vue
     return this.getFilteredTasks.filter(getFilteredTasks=>getFilteredTasks.status===this.myStatusOfTask.done);
   }
 
-  drag(index:number,where:string):void {
-    this.drugElementId=index;
+  drag(id:number,where:string):void {
+    this.drugElementId=id;
     this.whereFrom=where;
   }
 
   dropInDone():void {
-    //this.$emit("drug",this.drugElementId,"done",this.whereFrom);
-    tasksname.changeStatusDrug([this.drugElementId,"Done"]);
+    let i=0;
+    let index1=0;
+    for(i=0;i<this.myTask.length;i++) if (this.myTask[i].id==this.drugElementId) index1=i;
+    taskname1.ACT_EDIT_TASK([this.drugElementId,this.myTask[index1].nameOfTask,this.myTask[index1].myTask,this.myTask[index1].dateTask,this.myStatusOfTask.done]);
   }
 
   dropToDo():void {
-    //this.$emit("drug",this.drugElementId,"todo",this.whereFrom);
+    let i=0;
+    let index1=0;
+    for(i=0;i<this.myTask.length;i++) if (this.myTask[i].id==this.drugElementId) index1=i;
     if (this.whereFrom=="done") alert("Нельзя переносить из Done в Todo!");
-    else tasksname.changeStatusDrug([this.drugElementId,"To do"]);
+    else taskname1.ACT_EDIT_TASK([this.drugElementId,this.myTask[index1].nameOfTask,this.myTask[index1].myTask,this.myTask[index1].dateTask,this.myStatusOfTask.todo]);
   }
 
   dropInProgress():void {
-    //this.$emit("drug",this.drugElementId,"inprogress",this.whereFrom);
-    tasksname.changeStatusDrug([this.drugElementId,"In progress"]);
+    let i=0;
+    let index1=0;
+    for(i=0;i<this.myTask.length;i++) if (this.myTask[i].id==this.drugElementId) index1=i;
+    taskname1.ACT_EDIT_TASK([this.drugElementId,this.myTask[index1].nameOfTask,this.myTask[index1].myTask,this.myTask[index1].dateTask,this.myStatusOfTask.inprogress]);
   }
 
   editTask(id1:number):void {
@@ -187,6 +191,11 @@ export default class tasks extends Vue
   closeModalDetails():void {
     this.activeModalDetails=false;  
   }
+
+  async created() {
+    await taskname1.GET_TASKS_FROM_API();
+    this.myTask=await taskname1.GET_TASKS;
+} 
 
 }
 </script>
